@@ -10,12 +10,13 @@ from datetime import timedelta
 #the thing that needs fixing sometimes
 class Equipment(models.Model):
 
-    BIKE = "bike"
+    BIKE = "bi"
 
     EQUIPMENT_TYPE_CHOICES= (
         (BIKE, "Bike"),
     )
 
+    user = models.ForeignKey('auth.User')
     name = models.CharField(max_length=200)
     created_date = models.DateTimeField()
     equipment_type = models.CharField(max_length=2,choices=EQUIPMENT_TYPE_CHOICES,default=BIKE)
@@ -65,5 +66,16 @@ class MaintenanceTask(models.Model):
 #a record of fixing the thing
 class MaintenanceActivity(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    maintenance_tast = models.ForeignKey(MaintenanceTask, on_delete=models.CASCADE)
+    maintenance_task = models.ForeignKey(MaintenanceTask, on_delete=models.CASCADE)
     date_of_maintenance = models.DateTimeField()
+
+    def __str__(self):
+        return "{a.equipment}, {a.maintenance_task} ON {a.date_of_maintenance}".format(a=self)
+
+
+    def __str2__(self):
+        return "%(equip)s, %(task)s ON %(date)s"%{"equip":self.equipment,"task":self.maintenance_task,"date":self.date_of_maintenance}
+
+    #def __str__(self):
+        #return str(self.equipment) + ", " + str(self.maintenance_task) + " ON " +str(self.date_of_maintenance)
+
